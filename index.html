@@ -33,6 +33,26 @@
             margin-top: 15px;
             display: block;
         }
+        
+        .date-container {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .date-container span {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .date-container span:empty:before {
+            content: attr(data-placeholder);
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -45,9 +65,61 @@
     <textarea></textarea>
     
     <label>Essay</label>
-    <div contenteditable="true"></div>
+    <div contenteditable="true">This div is editable</div>
+    
+    <label>Date</label>
+    <div class="date-container">
+        <span contenteditable="true" data-placeholder="mm" data-min="1" data-max="12">mm</span>
+        <span contenteditable="true" data-placeholder="dd" data-min="1" data-max="31">dd</span>
+        <span contenteditable="true" data-placeholder="yyyy">yyyy</span>
+    </div>
 
-    <label>Essay 2</label>
-    <div contenteditable="true">Editable...</div>
+    <script>
+        document.querySelectorAll('.date-container span').forEach(span => {
+            // Clear placeholder on focus
+            span.addEventListener('focus', function() {
+                if (this.textContent === this.getAttribute('data-placeholder')) {
+                    this.textContent = '';
+                }
+            });
+            
+            // Handle input validation and auto-advance
+            span.addEventListener('input', function() {
+                let value = this.textContent;
+                let numValue = parseInt(value);
+                let min = parseInt(this.getAttribute('data-min'));
+                let max = parseInt(this.getAttribute('data-max'));
+                
+                // Only allow numbers
+                if (!/^\d*$/.test(value)) {
+                    this.textContent = value.replace(/\D/g, '');
+                    return;
+                }
+                
+                // Check limits and advance focus
+                if (min && max && numValue) {
+                    if (numValue > max) {
+                        this.textContent = max.toString();
+                        this.nextElementSibling?.focus();
+                    } else if (numValue < min && value.length >= max.toString().length) {
+                        this.textContent = min.toString();
+                        this.nextElementSibling?.focus();
+                    } else if (value.length >= 2 && this.getAttribute('data-placeholder') !== 'yyyy') {
+                        this.nextElementSibling?.focus();
+                    } else if (value.length >= 4 && this.getAttribute('data-placeholder') === 'yyyy') {
+                        this.blur();
+                    }
+                }
+            });
+            
+            // Restore placeholder if empty on blur
+            span.addEventListener('blur', function() {
+                if (this.textContent.trim() === '') {
+                    this.textContent = this.getAttribute('data-placeholder');
+                }
+            });
+        });
+    </script>
+    </style>
 </body>
 </html>
