@@ -82,12 +82,12 @@
         .copy-button:active {
             background-color: #004085;
         }
-        .clipboard-box {
+        .status-box {
             border: 2px solid #ddd;
             border-radius: 8px;
             background-color: #fff;
-            min-width: 120px;
-            min-height: 40px;
+            min-width: 60px;
+            min-height: 32px;
             padding: 8px;
             margin: 10px 0;
             font-size: 13px;
@@ -120,19 +120,30 @@
     <label>Lorem Text 1</label>
     <div class="copy-row">
         <div class="copy-container" id="lorem1-container">
-            <button class="copy-button" onclick="copyText(this, true)">Copy</button>
+            <button class="copy-button" onclick="copyText(this)">Copy</button>
             <div class="copy-text" id="lorem1-text"></div>
         </div>
-        <div class="clipboard-box" id="clipboard-box"></div>
+        <div class="status-box" id="status-box"></div>
     </div>
     
     <label>Lorem Text 2</label>
     <div class="copy-container">
-        <button class="copy-button" onclick="copyText(this, false)">Copy</button>
+        <button class="copy-button" onclick="copyText(this)">Copy</button>
         <div class="copy-text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</div>
     </div>
     
     <script>
+        // Generate random 6-char string for Lorem Text 1
+        function randomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        document.getElementById('lorem1-text').textContent = randomString(6);
+
         // Date input logic (unchanged)
         document.querySelectorAll('.date-container span').forEach(span => {
             span.addEventListener('focus', function() {
@@ -170,50 +181,35 @@
             });
         });
 
-        // Feature 1: Generate random 64-char string for Lorem Text 1
-        function randomString(length) {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-        const lorem1Text = randomString(10);
-        document.getElementById('lorem1-text').textContent = lorem1Text;
-
-        // Feature 2 & 3: Copy logic and clipboard box
-        function copyText(button, isLorem1) {
+        // Enhanced copyText function
+        function copyText(button) {
             const textElement = button.nextElementSibling;
             const textToCopy = textElement.textContent;
+            // Determine if this is the first lorem box
+            const isLorem1 = textElement.id === 'lorem1-text';
+            // Status box for lorem1
+            const statusBox = isLorem1 ? document.getElementById('status-box') : null;
 
             navigator.clipboard.writeText(textToCopy).then(function() {
+                // Success UI
                 const originalText = button.textContent;
                 button.textContent = 'Copied!';
                 button.style.backgroundColor = '#28a745';
-
+                if (statusBox) statusBox.textContent = 'success';
                 setTimeout(function() {
                     button.textContent = originalText;
                     button.style.backgroundColor = '#007bff';
+                    if (statusBox) statusBox.textContent = '';
                 }, 1500);
-
-                // Feature 3: If this is Lorem Text 1, read from clipboard and populate box
-                if (isLorem1) {
-                    // Read clipboard and set value in the small box
-                    setTimeout(function() {
-                        navigator.clipboard.readText().then(function(clipText) {
-                            document.getElementById('clipboard-box').textContent = clipText;
-                        });
-                    }, 100); // slight delay to ensure clipboard is updated
-                }
             }).catch(function(err) {
-                console.error('Failed to copy text: ', err);
+                // Error UI
                 button.textContent = 'Error';
                 button.style.backgroundColor = '#dc3545';
-
+                if (statusBox) statusBox.textContent = 'error';
                 setTimeout(function() {
                     button.textContent = 'Copy';
                     button.style.backgroundColor = '#007bff';
+                    if (statusBox) statusBox.textContent = '';
                 }, 1500);
             });
         }
