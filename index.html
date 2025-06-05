@@ -53,6 +53,42 @@
             content: attr(data-placeholder);
             color: #999;
         }
+        
+        .copy-container {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            background-color: white;
+            position: relative;
+            width: 320px;
+        }
+        
+        .copy-text {
+            padding: 10px;
+            line-height: 1.4;
+            color: #333;
+        }
+        
+        .copy-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .copy-button:active {
+            background-color: #004085;
+        }
     </style>
 </head>
 <body>
@@ -73,7 +109,19 @@
         <span contenteditable="true" data-placeholder="dd" data-min="1" data-max="31">dd</span>
         <span contenteditable="true" data-placeholder="yyyy">yyyy</span>
     </div>
-
+    
+    <label>Lorem Text 1</label>
+    <div class="copy-container">
+        <button class="copy-button" onclick="copyText(this)">Copy</button>
+        <div class="copy-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</div>
+    </div>
+    
+    <label>Lorem Text 2</label>
+    <div class="copy-container">
+        <button class="copy-button" onclick="copyText(this)">Copy</button>
+        <div class="copy-text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</div>
+    </div>
+    
     <script>
         document.querySelectorAll('.date-container span').forEach(span => {
             // Clear placeholder on focus
@@ -119,7 +167,31 @@
                 }
             });
         });
+        
+        function copyText(button) {
+            const textElement = button.nextElementSibling;
+            const textToCopy = textElement.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.backgroundColor = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '#007bff';
+                }, 1500);
+            }).catch(function(err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error';
+                button.style.backgroundColor = '#dc3545';
+                
+                setTimeout(function() {
+                    button.textContent = 'Copy';
+                    button.style.backgroundColor = '#007bff';
+                }, 1500);
+            });
+        }
     </script>
-    </style>
 </body>
 </html>
