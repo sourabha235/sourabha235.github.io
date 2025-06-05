@@ -8,7 +8,6 @@
             font-family: Arial, sans-serif;
             padding: 20px;
         }
-        
         input, textarea, div[contenteditable] {
             border: 2px solid #ddd;
             border-radius: 8px;
@@ -17,29 +16,24 @@
             display: block;
             width: 300px;
         }
-        
         textarea {
             height: 100px;
             resize: vertical;
         }
-        
         div[contenteditable] {
             min-height: 80px;
             background-color: white;
         }
-        
         label {
             font-weight: bold;
             margin-top: 15px;
             display: block;
         }
-        
         .date-container {
             display: flex;
             gap: 10px;
             margin: 10px 0;
         }
-        
         .date-container span {
             border: 2px solid #ddd;
             border-radius: 8px;
@@ -48,12 +42,15 @@
             min-width: 40px;
             text-align: center;
         }
-        
         .date-container span:empty:before {
             content: attr(data-placeholder);
             color: #999;
         }
-        
+        .copy-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
         .copy-container {
             border: 2px solid #ddd;
             border-radius: 8px;
@@ -62,13 +59,11 @@
             position: relative;
             width: 320px;
         }
-        
         .copy-text {
             padding: 10px;
             line-height: 1.4;
             color: #333;
         }
-        
         .copy-button {
             background-color: #007bff;
             color: white;
@@ -81,13 +76,25 @@
             top: 5px;
             right: 5px;
         }
-        
         .copy-button:hover {
             background-color: #0056b3;
         }
-        
         .copy-button:active {
             background-color: #004085;
+        }
+        .clipboard-box {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            min-width: 120px;
+            min-height: 40px;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: left;
         }
     </style>
 </head>
@@ -111,40 +118,37 @@
     </div>
     
     <label>Lorem Text 1</label>
-    <div class="copy-container">
-        <button class="copy-button" onclick="copyText(this)">Copy</button>
-        <div class="copy-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</div>
+    <div class="copy-row">
+        <div class="copy-container" id="lorem1-container">
+            <button class="copy-button" onclick="copyText(this, true)">Copy</button>
+            <div class="copy-text" id="lorem1-text"></div>
+        </div>
+        <div class="clipboard-box" id="clipboard-box"></div>
     </div>
     
     <label>Lorem Text 2</label>
     <div class="copy-container">
-        <button class="copy-button" onclick="copyText(this)">Copy</button>
+        <button class="copy-button" onclick="copyText(this, false)">Copy</button>
         <div class="copy-text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</div>
     </div>
     
     <script>
+        // Date input logic (unchanged)
         document.querySelectorAll('.date-container span').forEach(span => {
-            // Clear placeholder on focus
             span.addEventListener('focus', function() {
                 if (this.textContent === this.getAttribute('data-placeholder')) {
                     this.textContent = '';
                 }
             });
-            
-            // Handle input validation and auto-advance
             span.addEventListener('input', function() {
                 let value = this.textContent;
                 let numValue = parseInt(value);
                 let min = parseInt(this.getAttribute('data-min'));
                 let max = parseInt(this.getAttribute('data-max'));
-                
-                // Only allow numbers
                 if (!/^\d*$/.test(value)) {
                     this.textContent = value.replace(/\D/g, '');
                     return;
                 }
-                
-                // Check limits and advance focus
                 if (min && max && numValue) {
                     if (numValue > max) {
                         this.textContent = max.toString();
@@ -159,33 +163,54 @@
                     }
                 }
             });
-            
-            // Restore placeholder if empty on blur
             span.addEventListener('blur', function() {
                 if (this.textContent.trim() === '') {
                     this.textContent = this.getAttribute('data-placeholder');
                 }
             });
         });
-        
-        function copyText(button) {
+
+        // Feature 1: Generate random 64-char string for Lorem Text 1
+        function randomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        const lorem1Text = randomString(10);
+        document.getElementById('lorem1-text').textContent = lorem1Text;
+
+        // Feature 2 & 3: Copy logic and clipboard box
+        function copyText(button, isLorem1) {
             const textElement = button.nextElementSibling;
             const textToCopy = textElement.textContent;
-            
+
             navigator.clipboard.writeText(textToCopy).then(function() {
                 const originalText = button.textContent;
                 button.textContent = 'Copied!';
                 button.style.backgroundColor = '#28a745';
-                
+
                 setTimeout(function() {
                     button.textContent = originalText;
                     button.style.backgroundColor = '#007bff';
                 }, 1500);
+
+                // Feature 3: If this is Lorem Text 1, read from clipboard and populate box
+                if (isLorem1) {
+                    // Read clipboard and set value in the small box
+                    setTimeout(function() {
+                        navigator.clipboard.readText().then(function(clipText) {
+                            document.getElementById('clipboard-box').textContent = clipText;
+                        });
+                    }, 100); // slight delay to ensure clipboard is updated
+                }
             }).catch(function(err) {
                 console.error('Failed to copy text: ', err);
                 button.textContent = 'Error';
                 button.style.backgroundColor = '#dc3545';
-                
+
                 setTimeout(function() {
                     button.textContent = 'Copy';
                     button.style.backgroundColor = '#007bff';
