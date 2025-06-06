@@ -129,7 +129,13 @@
     <label>Lorem Text 2</label>
     <div class="copy-container">
         <button class="copy-button" onclick="copyText(this)">Copy</button>
-        <div class="copy-text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</div>
+        <div class="copy-text">
+            <pre>
+curl -X POST http://localhost:5000/test \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John"}'
+            </pre>
+        </div>
     </div>
     
     <script>
