@@ -137,8 +137,30 @@ curl -X POST http://localhost:5000/test \
             </pre>
         </div>
     </div>
+
+    <div class="wrapper">
+      <div tabindex="0" class="emotion-box" data-emotion="Bad" style="background-color: #fff; border: 1px solid rgba(136, 153, 166, 0.32);">
+        <img style="width: 3rem; height: auto;" src="https://d3imeoj536zhqj.cloudfront.net/images/uploads/orange.png" alt="Bad">Bad
+      </div>
+      <div tabindex="0" class="emotion-box" data-emotion="Pretty Good" style="background-color: #fff; border: 1px solid rgba(136, 153, 166, 0.32);">
+        <img style="width: 3rem; height: auto;" src="https://d3imeoj536zhqj.cloudfront.net/images/uploads/blue.png" alt="Pretty Good">Pretty Good
+      </div>
+      <div tabindex="0" class="emotion-box" data-emotion="Fantastic" style="background-color: #fff; border: 1px solid rgba(136, 153, 166, 0.32);">
+        <img style="width: 3rem; height: auto;" src="https://d3imeoj536zhqj.cloudfront.net/images/uploads/green.png" alt="Fantastic">Fantastic
+      </div>
+    </div>
+    
+    <div id="selected-emotion">Selected Emotion: None</div>
+    
     
     <script>
+        document.querySelectorAll('.emotion-box').forEach(el => {
+            el.addEventListener('click', () => {
+              const emotion = el.getAttribute('data-emotion');
+              document.getElementById('selected-emotion').textContent = `Selected Emotion: ${emotion}`;
+            });
+          });
+        
         // Generate random 6-char string for Lorem Text 1
         function randomString(length) {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
