@@ -138,6 +138,27 @@ curl -X POST http://localhost:5000/test \
         </div>
     </div>
 
+    <div style="padding: 50px;">
+        <h3>Create a safe password</h3>
+        
+        <input type="text" id="passwordInput" placeholder="Type here..." style="width: 300px; height: 40px; font-size: 16px; padding: 10px;">
+        
+        <div id="overlay" style="display: none; position: absolute; background: white; border: 1px solid #ccc; width: 320px; padding: 15px; margin-top: 5px; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+            <div>✓ Not have any white spaces</div>
+            <div>✓ Be a minimum of 10 characters</div>
+            <div>✓ Include at least one number</div>
+            <div>✓ Include at least one lowercase character</div>
+            <div>✓ Include at least one uppercase character</div>
+            <div>✓ Include at least one special character</div>
+        </div>
+        
+        <br><br>
+        
+        <button id="submitBtn" style="background: #007bff; color: white; padding: 15px 100px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; width: 500px; transition: background-color 0.2s ease;">
+            Submit
+        </button>
+    </div>
+
     <div class="wrapper">
       <div tabindex="0" class="emotion-box" data-emotion="Bad" style="background-color: #fff; border: 1px solid rgba(136, 153, 166, 0.32);">
         <img style="width: 3rem; height: auto;" src="https://d3imeoj536zhqj.cloudfront.net/images/uploads/orange.png" alt="Bad">Bad
@@ -241,6 +262,39 @@ curl -X POST http://localhost:5000/test \
                 }, 1500);
             });
         }
+
+        const input = document.getElementById('passwordInput');
+        const overlay = document.getElementById('overlay');
+        const button = document.getElementById('submitBtn');
+
+        // Show overlay when user starts typing
+        input.addEventListener('input', function() {
+            if (input.value.length > 0) {
+                overlay.style.display = 'block';
+            } else {
+                overlay.style.display = 'none';
+            }
+        });
+
+        // Hide overlay when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!input.contains(e.target) && !overlay.contains(e.target)) {
+                overlay.style.display = 'none';
+            }
+        });
+
+        // Button click handler with color animation
+        button.addEventListener('click', function() {
+            // Change to red
+            button.style.background = '#dc3545';
+            
+            // Change back to blue after 200ms
+            setTimeout(() => {
+                button.style.background = '#007bff';
+            }, 200);
+            
+            alert('Button clicked! Input value: ' + input.value);
+        });
     </script>
 </body>
 </html>
