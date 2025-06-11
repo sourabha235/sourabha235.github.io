@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Prompt Completions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto 30px;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .table-container {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .test-id {
+            width: 10%;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .prompt {
+            width: 60%;
+        }
+        
+        .status {
+            width: 30%;
+            text-align: center;
+        }
+        
+        .status-running {
+            color: #ff8c00;
+            font-weight: bold;
+        }
+        
+        .status-completed {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .countdown {
+            font-size: 12px;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .export-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: none;
+            transition: background-color 0.3s;
+        }
+        
+        .export-btn:hover {
+            background-color: #218838;
+        }
+        
+        .button-container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sample Prompt Completions</h1>
+    
+    <button class="submit-btn" onclick="startTests()">Start Test</button>
+    
+    <div class="table-container" id="tableContainer">
+        <table>
+            <thead>
+                <tr>
+                    <th class="test-id">Test ID</th>
+                    <th class="prompt">Prompt</th>
+                    <th class="status">Run Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="test-id">1</td>
+                    <td class="prompt">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna.</td>
+                    <td class="status"><span class="status-running">Running</span> <span class="countdown" id="countdown-0"></span></td>
+                </tr>
+                <tr>
+                    <td class="test-id">2</td>
+                    <td class="prompt">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam rem aperiam.</td>
+                    <td class="status"><span class="status-running">Running</span> <span class="countdown" id="countdown-1"></span></td>
+                </tr>
+                <tr>
+                    <td class="test-id">3</td>
+                    <td class="prompt">But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born completely.</td>
+                    <td class="status"><span class="status-running">Running</span> <span class="countdown" id="countdown-2"></span></td>
+                </tr>
+                <tr>
+                    <td class="test-id">4</td>
+                    <td class="prompt">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.</td>
+                    <td class="status"><span class="status-running">Running</span> <span class="countdown" id="countdown-3"></span></td>
+                </tr>
+                <tr>
+                    <td class="test-id">5</td>
+                    <td class="prompt">On the other hand we denounce with righteous indignation and dislike men who are so beguiled and demoralized.</td>
+                    <td class="status"><span class="status-running">Running</span> <span class="countdown" id="countdown-4"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="button-container">
+            <button class="export-btn" id="exportBtn" onclick="exportReport()">Export Report</button>
+        </div>
+    </div>
+
+    <script>
+        let completedTasks = 0;
+        let timeouts = [];
+        let countdownIntervals = [];
+        let completionTimes = [];
+
+        function startTests() {
+            const tableContainer = document.getElementById('tableContainer');
+            tableContainer.style.display = 'block';
+            
+            // Reset all statuses to running
+            const statusCells = document.querySelectorAll('.status span:first-child');
+            statusCells.forEach(cell => {
+                cell.className = 'status-running';
+                cell.textContent = 'Running';
+            });
+            
+            // Hide export button
+            document.getElementById('exportBtn').style.display = 'none';
+            completedTasks = 0;
+            
+            // Clear any existing timeouts and intervals
+            timeouts.forEach(timeout => clearTimeout(timeout));
+            countdownIntervals.forEach(interval => clearInterval(interval));
+            timeouts = [];
+            countdownIntervals = [];
+            completionTimes = [];
+            
+            // Set random completion times for each row (30 seconds to 2 minutes)
+            for (let i = 0; i < 5; i++) {
+                const randomTime = Math.random() * (120000 - 30000) + 30000; // 30s to 2min in milliseconds
+                completionTimes[i] = Date.now() + randomTime;
+                
+                // Start countdown for this row
+                startCountdown(i);
+                
+                const timeout = setTimeout(() => {
+                    completeTask(i);
+                }, randomTime);
+                timeouts.push(timeout);
+            }
+        }
+
+        function startCountdown(taskIndex) {
+            const countdownElement = document.getElementById(`countdown-${taskIndex}`);
+            
+            const interval = setInterval(() => {
+                const now = Date.now();
+                const timeLeft = completionTimes[taskIndex] - now;
+                
+                if (timeLeft <= 0) {
+                    countdownElement.textContent = '';
+                    clearInterval(interval);
+                } else {
+                    const seconds = Math.ceil(timeLeft / 1000);
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                    countdownElement.textContent = `(eta in ${formattedTime})`;
+                }
+            }, 1000);
+            
+            countdownIntervals.push(interval);
+        }
+
+        function completeTask(taskIndex) {
+            const statusCells = document.querySelectorAll('.status span:first-child');
+            const statusCell = statusCells[taskIndex];
+            const countdownElement = document.getElementById(`countdown-${taskIndex}`);
+            
+            statusCell.className = 'status-completed';
+            statusCell.textContent = 'Completed';
+            countdownElement.textContent = '';
+            
+            completedTasks++;
+            
+            // Show export button when all tasks are completed
+            if (completedTasks === 5) {
+                document.getElementById('exportBtn').style.display = 'inline-block';
+            }
+        }
+
+        function exportReport() {
+            const exportBtn = document.getElementById('exportBtn');
+            const tableContainer = document.getElementById('tableContainer');
+            
+            exportBtn.textContent = 'Exported';
+            exportBtn.disabled = true;
+            
+            // Change background to pink
+            tableContainer.style.backgroundColor = '#ffb6c1';
+            
+            setTimeout(() => {
+                exportBtn.textContent = 'Export Report';
+                exportBtn.disabled = false;
+                // Revert background color
+                tableContainer.style.backgroundColor = 'white';
+            }, 1000);
+            
+            // Revert background after 1 second but keep button changes for 3 seconds
+            setTimeout(() => {
+                tableContainer.style.backgroundColor = 'white';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
