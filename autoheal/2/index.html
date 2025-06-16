@@ -43,42 +43,39 @@
 <body>
     <div id="container">
         <div id="content">
-            <button id="openAgreementButton">Open Agreement</button>
+            <h1>Test App Agreement</h1>
             
-            <div id="agreementContent" style="display: none;">
-                <h1>Test App Agreement</h1>
-                
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                
-                <div>
-                    <input type="checkbox" id="agreeCheckbox">
-                    <label for="agreeCheckbox">I agree</label>
-                </div>
-                
-                <br>
-                
-                <button id="submitButton" disabled>Submit</button>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            
+            <div>
+                <input type="checkbox" id="agreeCheckbox">
+                <label for="agreeCheckbox">I agree</label>
             </div>
+            
+            <div>
+                <input type="checkbox" id="agreeAgainCheckbox">
+                <label for="agreeAgainCheckbox">I agree again</label>
+            </div>
+            
+            <br>
+            
+            <button id="submitButton" disabled>Submit</button>
         </div>
     </div>
 
     <script>
-        const openButton = document.getElementById('openAgreementButton');
-        const agreementContent = document.getElementById('agreementContent');
-        const checkbox = document.getElementById('agreeCheckbox');
+        const checkbox1 = document.getElementById('agreeCheckbox');
+        const checkbox2 = document.getElementById('agreeAgainCheckbox');
         const submitButton = document.getElementById('submitButton');
         const content = document.getElementById('content');
 
-        // Show agreement content when open button is clicked
-        openButton.addEventListener('click', function() {
-            openButton.style.display = 'none';
-            agreementContent.style.display = 'block';
-        });
+        function updateSubmitButton() {
+            submitButton.disabled = !(checkbox1.checked && checkbox2.checked);
+        }
 
-        // Enable/disable submit button based on checkbox
-        checkbox.addEventListener('change', function() {
-            submitButton.disabled = !checkbox.checked;
-        });
+        // Enable/disable submit button based on both checkboxes
+        checkbox1.addEventListener('change', updateSubmitButton);
+        checkbox2.addEventListener('change', updateSubmitButton);
 
         // Handle submit button click
         submitButton.addEventListener('click', function() {
