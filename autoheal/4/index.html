@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test App Agreement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .field-group {
+            margin-bottom: 15px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="content">
+            <h1>Test App Agreement</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            
+            <div class="field-group">
+                <input type="checkbox" id="agreeCheckbox">
+                <label for="agreeCheckbox">I agree</label>
+            </div>
+            <div class="field-group">
+                <input type="checkbox" id="agreeAgainCheckbox">
+                <label for="agreeAgainCheckbox">I agree again</label>
+            </div>
+
+            <!-- New fields start here -->
+            <div class="field-group">
+                <label for="nameInput">Name:</label>
+                <input type="text" id="nameInput" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label>Choose your editor:</label>
+                <div class="radio-group">
+                    <input type="radio" id="vimRadio" name="editor" value="vim">
+                    <label for="vimRadio">Vim</label>
+                    <input type="radio" id="emacsRadio" name="editor" value="emacs">
+                    <label for="emacsRadio">Emacs</label>
+                </div>
+            </div>
+            <div class="field-group">
+                <input type="checkbox" id="useAiCheckbox">
+                <label for="useAiCheckbox">Use AI</label>
+            </div>
+            <!-- New fields end here -->
+
+            <br>
+            <button id="submitButton" disabled>Submit</button>
+        </div>
+    </div>
+
+    <script>
+        const checkbox1 = document.getElementById('agreeCheckbox');
+        const checkbox2 = document.getElementById('agreeAgainCheckbox');
+        const nameInput = document.getElementById('nameInput');
+        const vimRadio = document.getElementById('vimRadio');
+        const emacsRadio = document.getElementById('emacsRadio');
+        const useAiCheckbox = document.getElementById('useAiCheckbox');
+        const submitButton = document.getElementById('submitButton');
+        const content = document.getElementById('content');
+
+        function updateSubmitButton() {
+            // Both agreement checkboxes checked
+            const agreed = checkbox1.checked && checkbox2.checked;
+            // Name input not empty (trim to ignore spaces)
+            const nameFilled = nameInput.value.trim() !== '';
+            // One radio selected
+            const editorSelected = vimRadio.checked || emacsRadio.checked;
+            // Use AI checked
+            const useAi = useAiCheckbox.checked;
+            // Enable button only if ALL conditions are true
+            submitButton.disabled = !(agreed && nameFilled && editorSelected && useAi);
+        }
+
+        // Listen to all input events
+        checkbox1.addEventListener('change', updateSubmitButton);
+        checkbox2.addEventListener('change', updateSubmitButton);
+        nameInput.addEventListener('input', updateSubmitButton);
+        vimRadio.addEventListener('change', updateSubmitButton);
+        emacsRadio.addEventListener('change', updateSubmitButton);
+        useAiCheckbox.addEventListener('change', updateSubmitButton);
+
+        submitButton.addEventListener('click', function() {
+            content.innerHTML = '<h1>✅ Success!</h1>';
+        });
+    </script>
+</body>
+</html>
