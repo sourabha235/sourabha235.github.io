@@ -10,10 +10,17 @@
     
     <div id="lorem1" style="height: 150px; width: 500px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
     </div>
+    
+    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+    
+    <br/>
+    <div id="lorem2" style="height: 150px; width: 500px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+    </div>
+    <br/>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const body = document.body;
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 5; i++) {
                 const p = document.createElement('p');
                 p.textContent = 'Lorem ipsum dolor sit amet consectetur adipiscing elit.';
                 body.appendChild(p);
@@ -25,6 +32,13 @@
                 const p = document.createElement('p');
                 p.textContent = 'INSIDE: Lorem ipsum dolor sit amet consectetur adipiscing elit.';
                 lorem1.appendChild(p);
+            }
+            
+            const lorem2 = document.getElementById("lorem2");
+            for (let i = 0; i < 10; i++) {
+                const p = document.createElement('p');
+                p.textContent = 'INSIDE: Lorem ipsum dolor sit amet consectetur adipiscing elit.';
+                lorem2.appendChild(p);
             }
         });
     </script>
