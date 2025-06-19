@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Page</title>
+</head>
+<body>
+    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+    
+    <div id="lorem1" style="height: 150px; width: 500px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const p = document.createElement('p');
+                p.textContent = 'Lorem ipsum dolor sit amet consectetur adipiscing elit.';
+                body.appendChild(p);
+                
+            }
+            
+            const lorem1 = document.getElementById("lorem1");
+            for (let i = 0; i < 10; i++) {
+                const p = document.createElement('p');
+                p.textContent = 'INSIDE: Lorem ipsum dolor sit amet consectetur adipiscing elit.';
+                lorem1.appendChild(p);
+            }
+        });
+    </script>
+</body>
+</html>
