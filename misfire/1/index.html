@@ -68,11 +68,37 @@
     <div class="container">
         <h1>Button Click Demo</h1>
         
-        <button class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">Submit</button>
-        <label class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">Button</label>
+        <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">
+            <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">
+                <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">
+                    <button class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">Submit</button>
+                </div>
+            </div>
+        </div>
         
-        <button class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">Submit</button>
-        <label class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">Button</label>
+        <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">
+            <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">
+                <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">
+                    <label class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">Submit</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">
+            <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">
+                <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">
+                    <button class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">Submit</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">
+            <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">
+                <div class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">
+                    <label class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">Submit</label>
+                </div>
+            </div>
+        </div>
         
         <div id="eventDiv">no event</div>
     </div>
