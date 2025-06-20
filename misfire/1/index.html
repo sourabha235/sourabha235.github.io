@@ -68,8 +68,11 @@
     <div class="container">
         <h1>Button Click Demo</h1>
         
-        <button class="some-button" disabled onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">Submit</button>
+        <button class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">Submit</button>
+        <label class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 1 clicked'">Button 1 Label</label>
+        
         <button class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">Submit</button>
+        <label class="some-button" onclick="document.getElementById('eventDiv').textContent = 'button 2 clicked'">Button 2 Label</label>
         
         <div id="eventDiv">no event</div>
     </div>
