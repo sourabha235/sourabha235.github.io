@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>2-Stage Web App</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f5f5; margin: 0; }
+    .container { max-width: 400px; margin: 60px auto; background: #fff; padding: 30px 24px; border-radius: 8px; box-shadow: 0 4px 16px #0001; }
+    button { padding: 8px 20px; margin-top: 16px; font-size: 1rem; border-radius: 5px; border: 1px solid #ddd; background: #fafafa; cursor: pointer;}
+    input[type="text"], input[type="email"] { width: 95%; padding: 8px; margin: 10px 0 18px 0; border-radius: 5px; border: 1px solid #ccc;}
+    label { display: block; margin-bottom: 12px; }
+    .checkbox-group { margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container" style="text-align:center;">
+      <h1>Daily News Portal</h1>
+  </div>
+  <div class="container" id="app">
+    <!-- Content will be injected here -->
+  </div>
+  <script>
+    const app = document.getElementById('app');
+
+    function renderHome() {
+      app.innerHTML = `
+        <h2>Welcome</h2>
+        <button id="signupBtn">Sign up</button>
+      `;
+      document.getElementById('signupBtn').onclick = renderSignup;
+    }
+
+    function renderSignup() {
+      app.innerHTML = `
+        <h2>Sign Up</h2>
+        <label>
+          Name:<br>
+          <input type="text" id="nameInput" autocomplete="off">
+        </label>
+        <label>
+          Email:<br>
+          <input type="email" id="emailInput" autocomplete="off">
+        </label>
+        <button id="nextBtn">Next</button>
+      `;
+      document.getElementById('nextBtn').onclick = renderTerms;
+    }
+
+    function renderTerms() {
+      app.innerHTML = `
+        <h2>Terms & Conditions</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="agreeTerms"> I agree to terms</label>
+          <label><input type="checkbox" id="agreeConditions"> I agree to conditions</label>
+        </div>
+        <button id="submitBtn">Submit</button>
+      `;
+      document.getElementById('submitBtn').onclick = renderHome;
+    }
+
+    // Initial load
+    renderHome();
+  </script>
+</body>
+</html>
