@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>File Upload Preview</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 50px;
+      text-align: center;
+    }
+    #preview {
+      margin-top: 30px;
+    }
+    img {
+      max-width: 300px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome!</h1>
+  <input type="file" id="fileInput" />
+
+  <div id="preview"></div>
+
+  <script>
+    const input = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+
+    input.addEventListener('change', function () {
+      const file = this.files[0];
+      preview.innerHTML = ''; // Clear previous content
+
+      if (!file) return;
+
+      if (file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.onload = () => URL.revokeObjectURL(img.src); // Free memory
+
+        const message = document.createElement('p');
+        message.textContent = 'You uploaded this!';
+
+        preview.appendChild(message);
+        preview.appendChild(img);
+      } else {
+        preview.textContent = `You uploaded: ${file.name}`;
+      }
+    });
+  </script>
+
+</body>
+</html>
