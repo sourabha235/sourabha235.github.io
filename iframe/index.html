@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Click Tracker App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f8fb;
+      color: #222;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .side-panel {
+      width: 260px;
+      background: #232c3b;
+      color: #fff;
+      padding: 20px 10px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      border-right: 2px solid #e2e6eb;
+    }
+    .side-panel h2 {
+      margin-top: 0;
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      color: #a9d0ff;
+    }
+    .click-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .click-list li {
+      background: #33415c;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.97rem;
+      word-break: break-word;
+      transition: background 0.2s;
+    }
+    .click-list li:last-child {
+      background: #4163c7;
+    }
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      min-width: 0;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      color: #222b38;
+    }
+    .form-section {
+      background: #f7fafd;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(80,110,170,0.09);
+      padding: 30px 32px 22px 32px;
+      margin-bottom: 32px;
+      min-width: 340px;
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .form-section label {
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #3557c2;
+    }
+    .form-section input[type="text"],
+    .form-section select {
+      font-size: 1rem;
+      padding: 7px 11px;
+      border: 1.5px solid #d2d8e3;
+      border-radius: 8px;
+      margin-bottom: 7px;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #fff;
+    }
+    .form-section input[type="text"]:focus,
+    .form-section select:focus {
+      border-color: #587cf7;
+    }
+    .form-section .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .form-section button,
+    .form-section input[type="submit"] {
+      background: #587cf7;
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(88,124,247,0.11);
+      margin-top: 10px;
+      margin-right: 10px;
+      transition: background 0.2s;
+    }
+    .form-section button:hover,
+    .form-section input[type="submit"]:hover {
+      background: #3557c2;
+    }
+    iframe {
+      border: 2px solid #e3e8ef;
+      border-radius: 16px;
+      box-shadow: 0 6px 24px rgba(80,110,170,0.12);
+      width: 520px;
+      height: 350px;
+      background: #fff;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="side-panel">
+      <h2>Clicked Elements</h2>
+      <ul class="click-list" id="clickList">
+        <!-- Clicked elements appear here -->
+      </ul>
+    </div>
+    <div class="main-content">
+      <h1>This is a Header</h1>
+      <p>This is a paragraph.</p>
+      <div class="form-section">
+        <label for="input1">Name:</label>
+        <input type="text" id="input1" placeholder="Enter your name">
+
+        <label for="selector1">Choose an option:</label>
+        <select id="selector1">
+          <option value="">Select...</option>
+          <option value="alpha">Alpha</option>
+          <option value="beta">Beta</option>
+          <option value="gamma">Gamma</option>
+        </select>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="checkbox1">
+          <label for="checkbox1" style="margin-bottom:0; color:#333;">I agree</label>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+          <button type="button">Primary Action</button>
+          <button type="button">Secondary Action</button>
+          <input type="submit" value="Submit Form">
+        </div>
+      </div>
+      <iframe src="https://example.com" title="Different Origin"></iframe>
+      <iframe src="https://sourabha235.github.io/autoheal/1/" title="Same Origin"></iframe>
+    </div>
+  </div>
+  <script>
+    const clickList = document.getElementById('clickList');
+    window.addEventListener('click', function(e) {
+      // Avoid counting clicks on the panel itself
+      if (e.target.closest('.side-panel')) return;
+
+      // Element details (tag, class, id, maybe short text)
+      const tag = e.target.tagName;
+      const id = e.target.id ? `#${e.target.id}` : '';
+      const cls = e.target.className ? `.${e.target.className.split(' ').join('.')}` : '';
+      let text = '';
+      if (e.target.tagName === "INPUT" && e.target.type !== "checkbox") {
+        text = e.target.value ? `: "${e.target.value}"` : '';
+      } else if (e.target.tagName === "SELECT") {
+        text = e.target.value ? `: "${e.target.value}"` : '';
+      } else if (e.target.tagName === "BUTTON" || e.target.tagName === "A") {
+        text = e.target.textContent.trim().slice(0, 32) ? `: "${e.target.textContent.trim().slice(0,32)}"` : '';
+      } else if (e.target.tagName === "LABEL") {
+        text = e.target.textContent.trim().slice(0, 32) ? `: "${e.target.textContent.trim().slice(0,32)}"` : '';
+      }
+
+      const elInfo = `<strong>${tag}${id}${cls}</strong>${text}`;
+      const li = document.createElement('li');
+      li.innerHTML = elInfo;
+      clickList.appendChild(li);
+      // Always scroll to bottom on new entry
+      clickList.scrollTop = clickList.scrollHeight;
+    });
+  </script>
+</body>
+</html>
