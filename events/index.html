@@ -109,25 +109,37 @@
                 eventCount = 0;
                 eventList.innerHTML = '';
                 
-                // Generate events at random intervals between 50-200ms
-                function scheduleNextEvent() {
-                    if (isGenerating) {
-                        const delay = Math.random() * 150 + 50; // 50-200ms
-                        setTimeout(() => {
-                            generateRandomEvent();
-                            scheduleNextEvent();
-                        }, delay);
-                    }
-                }
-                scheduleNextEvent();
+                // Generate events very rapidly using multiple parallel timers
+                const timers = [];
                 
-                // Update stats every 100ms
-                statsIntervalId = setInterval(updateStats, 100);
+                // Create 5 parallel event generators with very short intervals
+                for (let i = 0; i < 5; i++) {
+                    function rapidGenerate() {
+                        if (isGenerating) {
+                            generateRandomEvent();
+                            const delay = Math.random() * 20 + 5; // 5-25ms
+                            timers[i] = setTimeout(rapidGenerate, delay);
+                        }
+                    }
+                    rapidGenerate();
+                }
+                
+                // Also use setInterval for additional rapid generation
+                intervalId = setInterval(() => {
+                    if (isGenerating) {
+                        generateRandomEvent();
+                        generateRandomEvent(); // Generate 2 events per interval
+                    }
+                }, 10); // Every 10ms
+                
+                // Update stats every 50ms for smoother updates
+                statsIntervalId = setInterval(updateStats, 50);
             } else {
                 // Stop generating
                 isGenerating = false;
                 button.textContent = 'Start Generating Events';
                 clearInterval(statsIntervalId);
+                clearInterval(intervalId);
             }
         });
     </script>
