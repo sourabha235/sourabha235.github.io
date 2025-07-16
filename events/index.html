@@ -13,6 +13,14 @@
             padding: 10px 20px;
             font-size: 16px;
             margin-bottom: 20px;
+            margin-right: 10px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            margin-right: 10px;
+            width: 150px;
         }
         #eventDiv {
             border: 1px solid #ccc;
@@ -41,6 +49,9 @@
 </head>
 <body>
     <button id="startButton">Start Generating Events</button>
+    <button id="button2">Button 2</button>
+    <input type="text" id="input1" placeholder="Input field 1">
+    <input type="text" id="input2" placeholder="Input field 2">
     <div id="eventDiv">
         <div class="stats">
             Events: <span id="eventCount">0</span> | 
@@ -64,6 +75,9 @@
         ];
 
         const button = document.getElementById('startButton');
+        const button2 = document.getElementById('button2');
+        const input1 = document.getElementById('input1');
+        const input2 = document.getElementById('input2');
         const eventDiv = document.getElementById('eventDiv');
         const eventList = document.getElementById('eventList');
         const eventCountSpan = document.getElementById('eventCount');
@@ -75,7 +89,7 @@
             const event = new Event(eventType, { bubbles: true });
             
             // Dispatch the event on different elements randomly
-            const targets = [document.body, document.documentElement, window];
+            const targets = [document.body, document.documentElement, window, button2, input1, input2];
             const target = targets[Math.floor(Math.random() * targets.length)];
             
             target.dispatchEvent(event);
@@ -117,7 +131,7 @@
                     function rapidGenerate() {
                         if (isGenerating) {
                             generateRandomEvent();
-                            const delay = Math.random() * 20 + 5; // 5-25ms
+                            const delay = Math.random() * 20 + 250; // 5-25ms
                             timers[i] = setTimeout(rapidGenerate, delay);
                         }
                     }
