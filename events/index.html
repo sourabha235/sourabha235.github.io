@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        #eventDiv {
+            border: 1px solid #ccc;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        .stats {
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            background-color: #f9f9f9;
+            flex-shrink: 0;
+        }
+        #eventList {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            margin: 0;
+        }
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button id="startButton">Start Generating Events</button>
+    <div id="eventDiv">
+        <div class="stats">
+            Events: <span id="eventCount">0</span> | 
+            Time: <span id="timeElapsed">0</span>s | 
+            Rate: <span id="eventRate">0</span> events/s
+        </div>
+        <ul id="eventList"></ul>
+    </div>
+
+    <script>
+        let isGenerating = false;
+        let intervalId;
+        let eventCount = 0;
+        let startTime;
+        let statsIntervalId;
+
+        const eventTypes = [
+            'keydown', 'keyup', 'beforeinput', 'input',
+            'pointerdown', 'mousedown', 'auxclick', 'dblclick',
+            'click', 'scroll'
+        ];
+
+        const button = document.getElementById('startButton');
+        const eventDiv = document.getElementById('eventDiv');
+        const eventList = document.getElementById('eventList');
+        const eventCountSpan = document.getElementById('eventCount');
+        const timeElapsedSpan = document.getElementById('timeElapsed');
+        const eventRateSpan = document.getElementById('eventRate');
+
+        function generateRandomEvent() {
+            const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+            const event = new Event(eventType, { bubbles: true });
+            
+            // Dispatch the event on different elements randomly
+            const targets = [document.body, document.documentElement, window];
+            const target = targets[Math.floor(Math.random() * targets.length)];
+            
+            target.dispatchEvent(event);
+            
+            // Add to display list
+            const listItem = document.createElement('li');
+            listItem.textContent = eventType;
+            eventList.appendChild(listItem);
+            
+            eventCount++;
+            
+            // Auto-scroll to bottom
+            eventList.scrollTop = eventList.scrollHeight;
+        }
+
+        function updateStats() {
+            const elapsed = (Date.now() - startTime) / 1000;
+            const rate = eventCount / elapsed;
+            
+            eventCountSpan.textContent = eventCount;
+            timeElapsedSpan.textContent = elapsed.toFixed(1);
+            eventRateSpan.textContent = rate.toFixed(1);
+        }
+
+        button.addEventListener('click', function() {
+            if (!isGenerating) {
+                // Start generating
+                isGenerating = true;
+                button.textContent = 'Stop Generating Events';
+                startTime = Date.now();
+                eventCount = 0;
+                eventList.innerHTML = '';
+                
+                // Generate events at random intervals between 50-200ms
+                function scheduleNextEvent() {
+                    if (isGenerating) {
+                        const delay = Math.random() * 150 + 50; // 50-200ms
+                        setTimeout(() => {
+                            generateRandomEvent();
+                            scheduleNextEvent();
+                        }, delay);
+                    }
+                }
+                scheduleNextEvent();
+                
+                // Update stats every 100ms
+                statsIntervalId = setInterval(updateStats, 100);
+            } else {
+                // Stop generating
+                isGenerating = false;
+                button.textContent = 'Start Generating Events';
+                clearInterval(statsIntervalId);
+            }
+        });
+    </script>
+</body>
+</html>
